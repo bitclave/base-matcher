@@ -10,11 +10,15 @@ import com.bitclave.matcher.models.Offer;
 import com.bitclave.matcher.models.OfferSearch;
 import com.bitclave.matcher.models.SearchRequest;
 import com.bitclave.matcher.store.OfferStore;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class SearchRequestProcessor {
+
+  private static final Logger log = LoggerFactory.getLogger(SearchRequestProcessor.class);
 
   @Autowired
   private BaseClient baseRepository;
@@ -23,6 +27,7 @@ public class SearchRequestProcessor {
   private OfferStore offerStore;
 
   public void process(List<SearchRequest> requests) {
+    log.info("Processing requests:", requests);
     if (requests == null || requests.isEmpty()) {
       return;
     }
@@ -37,6 +42,6 @@ public class SearchRequestProcessor {
   private Stream<? extends OfferSearch> match(SearchRequest request) {
     List<Offer> matches = offerStore.search(request.getTags());
     return matches.stream()
-        .map(offer -> newOfferSearch(offer.getId(), request.getId()));
+        .map(offer -> newOfferSearch(request.getId(), offer.getId()));
   }
 }

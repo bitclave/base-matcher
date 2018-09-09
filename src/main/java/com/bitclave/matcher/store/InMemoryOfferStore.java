@@ -8,10 +8,13 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.bitclave.matcher.models.Offer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class InMemoryOfferStore implements OfferStore {
+  private static final Logger log = LoggerFactory.getLogger(InMemoryOfferStore.class);
 
   private List<Offer> EMPTY = Collections.emptyList();
   private Map<Long, Offer> store = new ConcurrentHashMap<>();
@@ -22,6 +25,7 @@ public class InMemoryOfferStore implements OfferStore {
         .filter(offer -> !store.containsKey(offer.getId()))//filter that are already inserted
         .collect(toList());
 
+    log.info("new offers found:" + newOffers);
     newOffers.forEach(offer -> store.put(offer.getId(), offer));
     return newOffers.size();
   }

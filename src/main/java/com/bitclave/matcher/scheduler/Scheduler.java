@@ -25,7 +25,8 @@ public class Scheduler {
 
   @Scheduled(fixedDelay = 5000)
   public void fetchOffers() {
-    offerStore.insert(baseRepository.offers());
+    int newOffers = offerStore.insert(baseRepository.offers());
+    log.info("{} new offers inserted to OfferStore", newOffers);
   }
 
   @Scheduled(fixedDelay = 5000)
