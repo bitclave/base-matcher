@@ -12,6 +12,16 @@ import lombok.Value;
 @Value
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Offer {
+  private long id;
+  private String owner;
+  private String description = "";
+  private String title = "";
+  private String imageUrl = "";
+  private String worth = BigDecimal.ZERO.toString();
+  private Map<String, String> tags = new HashMap<>();
+  private Map<String, String> compare = new HashMap<>();
+  private Map<String, CompareAction> rules = new HashMap<>();
+
   @AllArgsConstructor
   public enum CompareAction {
     EQUALLY("="),
@@ -23,14 +33,4 @@ public class Offer {
 
     @Getter private String value;
   }
-
-  private long id;
-  private String owner;
-  private String description = "";
-  private String title = "";
-  private String imageUrl = "";
-  private String worth = BigDecimal.ZERO.toString();
-  private Map<String, String> tags = new HashMap<>();
-  private Map<String, String> compare = new HashMap<>();
-  private Map<String, CompareAction> rules = new HashMap<>();
 }

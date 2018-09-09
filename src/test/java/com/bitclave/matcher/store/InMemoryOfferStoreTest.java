@@ -13,6 +13,21 @@ import org.junit.Test;
 public class InMemoryOfferStoreTest {
 
   @Test
+  public void insertFiltersAlreadyInsertedOnes() {
+    Offer offer = new Offer(1L, "owner");
+    offer.getTags().put("key1", "value1");
+    offer.getTags().put("key2", "value2");
+    offer.getTags().put("key3", "value3");
+
+    InMemoryOfferStore offerStore = new InMemoryOfferStore();
+    int newOffersInserted = offerStore.insert(Arrays.asList(offer));
+    assertThat(newOffersInserted).isEqualTo(1);
+
+    newOffersInserted = offerStore.insert(Arrays.asList(offer));
+    assertThat(newOffersInserted).isEqualTo(0);
+  }
+
+  @Test
   public void searchReturnsNoOffersWhenTagsIsEmpty() {
     Offer offer = new Offer(1L, "owner");
     offer.getTags().put("key1", "value1");

@@ -2,7 +2,7 @@ package com.bitclave.matcher.store;
 
 import static java.util.stream.Collectors.toList;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -13,14 +13,17 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class InMemoryOfferStore implements OfferStore {
 
-  private List<Offer> EMPTY = new ArrayList<>();
+  private List<Offer> EMPTY = Collections.emptyList();
   private Map<Long, Offer> store = new ConcurrentHashMap<>();
 
   @Override
-  public void insert(List<Offer> offers) {
-    offers.stream()
-        .filter(offer -> !store.containsKey(offer.getId())) //filter that are already inserted
-        .forEach(offer -> store.put(offer.getId(), offer));
+  public int insert(List<Offer> offers) {
+    List<Offer> newOffers = offers.stream()
+        .filter(offer -> !store.containsKey(offer.getId()))//filter that are already inserted
+        .collect(toList());
+
+    newOffers.forEach(offer -> store.put(offer.getId(), offer));
+    return newOffers.size();
   }
 
   @Override

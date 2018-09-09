@@ -4,12 +4,6 @@ import lombok.Value;
 
 @Value
 public class OfferSearch {
-  public enum OfferResultAction {
-    NONE,
-    ACCEPT,
-    REJECT;
-  }
-
   private Long id = 0L;
   private Long searchRequestId;
   private Long offerId;
@@ -22,5 +16,11 @@ public class OfferSearch {
 
   public static OfferSearch newOfferSearch(Long searchRequestId, Long offerId) {
     return new OfferSearch(searchRequestId, offerId);
+  }
+
+  public enum OfferResultAction {
+    NONE,
+    ACCEPT,
+    REJECT;
   }
 }
