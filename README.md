@@ -10,7 +10,7 @@ In BASE platform, offers contain keywords and search requests contain free text 
 
 # How to Run
 * Check `application.properties` for BASE endpoint and for Matcher's public & private key
-* If you dont have one generate a public & private keys using [base-tutorial]()
+* If you dont have one generate a public & private keys using [base-tutorial](https://github.com/bitclave/base-tutorial)
 * Run using gradle
   ```
   ./gradlew bootRun
