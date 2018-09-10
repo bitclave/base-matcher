@@ -29,6 +29,9 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter-quartz')
     compile("com.fasterxml.jackson.core:jackson-databind")
 
+    compile 'com.google.code.gson:gson:2.8.2'
+    compile 'org.bitcoinj:bitcoinj-core:0.14.5'
+
     testCompile("junit:junit")
     testCompile("org.mockito:mockito-core")
     testCompile("org.assertj:assertj-core")
