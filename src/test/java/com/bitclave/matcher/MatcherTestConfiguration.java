@@ -15,7 +15,7 @@ public class MatcherTestConfiguration {
 
   @Bean
   @Primary
-  public BaseClient baseClientService() {
+  public BaseClient baseClient() {
     return Mockito.mock(BaseClient.class);
   }
 

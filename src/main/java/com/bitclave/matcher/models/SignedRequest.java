@@ -15,17 +15,17 @@ public class SignedRequest<T> {
   private String sig;
   private Long nonce = 0L;
 
-  public void signMessage(String privateKey) {
-    ECKey key = ECKey.fromPrivate(new BigInteger(privateKey, 16));
-    Gson GSON = new GsonBuilder().disableHtmlEscaping().create();
-    this.sig = key.signMessage(GSON.toJson(this.data));
-  }
-
-  public static <T> SignedRequest<T> newSignedRequest(T  data, String publicKey, long nonce) {
+  public static <T> SignedRequest<T> newSignedRequest(T data, String publicKey, long nonce) {
     SignedRequest<T> request = new SignedRequest();
     request.data = data;
     request.pk = publicKey;
     request.nonce = nonce;
     return request;
+  }
+
+  public void signMessage(String privateKey) {
+    ECKey key = ECKey.fromPrivate(new BigInteger(privateKey, 16));
+    Gson GSON = new GsonBuilder().disableHtmlEscaping().create();
+    this.sig = key.signMessage(GSON.toJson(this.data));
   }
 }

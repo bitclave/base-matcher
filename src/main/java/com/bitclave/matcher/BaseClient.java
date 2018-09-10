@@ -58,20 +58,18 @@ public class BaseClient {
   }
 
   public void saveOfferSearch(List<OfferSearch> offerSearches) {
-    if(offerSearches == null || offerSearches.isEmpty()) {
+    if (offerSearches == null || offerSearches.isEmpty()) {
       return;
     }
     final AtomicLong nonce = new AtomicLong(getNonce());
     offerSearches.stream()
-        .map(offerSearch -> newSignedRequest(offerSearches.get(0), publicKey, nonce.incrementAndGet()))
+        .map(offerSearch -> newSignedRequest(offerSearches.get(0), publicKey,
+            nonce.incrementAndGet()))
         .forEach(signedRequest -> {
           signedRequest.signMessage(privateKey);
           log.info("Saving offerSearch to BASE: {}", signedRequest.toString());
           HttpEntity<SignedRequest> request = new HttpEntity<>(signedRequest);
-          OfferSearch
-              saved =
-              restTemplate.postForObject("/v1/search/result", request, OfferSearch.class);
-          log.info("Saved offerSearch: {}", saved);
+          restTemplate.exchange("/v1/search/result", HttpMethod.POST, request, OfferSearch.class);
         });
   }
 
@@ -85,7 +83,7 @@ public class BaseClient {
   }
 
   public long getNonce() {
-    Long nonce = restTemplate.getForObject("/v1/nonce/"+publicKey, Long.class);
+    Long nonce = restTemplate.getForObject("/v1/nonce/" + publicKey, Long.class);
     return nonce.longValue();
   }
 }

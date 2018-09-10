@@ -55,7 +55,9 @@ public class SearchRequestProcessor {
       return true;
     }).collect(toList());
 
-    baseRepository.saveOfferSearch(nonExistingOffers);
+    if (!nonExistingOffers.isEmpty()) {
+      baseRepository.saveOfferSearch(nonExistingOffers);
+    }
   }
 
   private Stream<? extends OfferSearch> match(SearchRequest request) {
