@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -61,16 +62,28 @@ public class BaseClient {
     if (offerSearches == null || offerSearches.isEmpty()) {
       return;
     }
-    final AtomicLong nonce = new AtomicLong(getNonce());
-    offerSearches.stream()
-        .map(offerSearch -> newSignedRequest(offerSearches.get(0), publicKey,
-            nonce.incrementAndGet()))
-        .forEach(signedRequest -> {
-          signedRequest.signMessage(privateKey);
-          log.info("Saving offerSearch to BASE: {}", signedRequest.toString());
-          HttpEntity<SignedRequest> request = new HttpEntity<>(signedRequest);
-          restTemplate.exchange("/v1/search/result", HttpMethod.POST, request, OfferSearch.class);
-        });
+    AtomicLong nonce = new AtomicLong(getNonce());
+    for (OfferSearch offerSearch : offerSearches) {
+      int retries = 3;
+      do {
+        ResponseEntity<OfferSearch> result = saveOfferSearch(nonce, offerSearch);
+        if (result.getStatusCode() == HttpStatus.CREATED) {
+          break;
+        } else {
+          retries--;
+          nonce = new AtomicLong(getNonce()); //see if nonce needs to be fetched again
+        }
+      } while(retries > 0);
+    }
+  }
+
+  private ResponseEntity<OfferSearch> saveOfferSearch(AtomicLong nonce, OfferSearch offerSearch) {
+    SignedRequest<OfferSearch>
+        signedRequest = newSignedRequest(offerSearch, publicKey, nonce.incrementAndGet());
+    signedRequest.signMessage(privateKey);
+    log.info("Saving offerSearch to BASE: {}", signedRequest.toString());
+    HttpEntity<SignedRequest> request = new HttpEntity<>(signedRequest);
+    return restTemplate.exchange("/v1/search/result", HttpMethod.POST, request, OfferSearch.class);
   }
 
   public List<OfferSearchResultItem> findOfferSearch(Long searchRequestId) {
