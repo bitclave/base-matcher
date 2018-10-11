@@ -8,10 +8,12 @@ import java.util.List;
 
 import com.bitclave.matcher.models.Offer;
 import com.bitclave.matcher.models.SearchRequest;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class InMemoryOfferStoreTest {
 
+  @Ignore("Not caching until there is a way to identify deleted ones")
   @Test
   public void insertFiltersAlreadyInsertedOnes() {
     Offer offer = new Offer(1L, "owner");
