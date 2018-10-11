@@ -21,13 +21,9 @@ public class InMemoryOfferStore implements OfferStore {
 
   @Override
   public int insert(List<Offer> offers) {
-    List<Offer> newOffers = offers.stream()
-        .filter(offer -> !store.containsKey(offer.getId()))//filter that are already inserted
-        .collect(toList());
-
-    log.info("new offers found:" + newOffers);
-    newOffers.forEach(offer -> store.put(offer.getId(), offer));
-    return newOffers.size();
+    store.clear();
+    offers.forEach(offer -> store.put(offer.getId(), offer));
+    return offers.size();
   }
 
   @Override
