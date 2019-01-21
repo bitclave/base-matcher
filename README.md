@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/bitclave/base-matcher.svg?branch=master)](https://travis-ci.org/bitclave/base-matcher)
 # Match Making
 
 In BASE platform, offers contain keywords and search requests contain free text search query, matchmaking is the process of matching search requests to offers.
