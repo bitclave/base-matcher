@@ -3,19 +3,28 @@ package com.bitclave.matcher.models;
 import com.bitclave.matcher.models.deserializers.OfferSearchActionDeserializer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.Value;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Date;
 
 @Value
 public class OfferSearch {
   private Long id = 0L;
   private Long searchRequestId;
   private Long offerId;
-
   @JsonDeserialize(using = OfferSearchActionDeserializer.class)
   private OfferResultAction state = OfferResultAction.NONE;
+  private String lastUpdated;
+  private String info;
+  private List<String> events;
+
 
   private OfferSearch(Long searchRequestId, Long offerId) {
     this.searchRequestId = searchRequestId;
     this.offerId = offerId;
+    this.lastUpdated = new Date().toString();
+    this.info = "created by base-matcher";
+    this.events = new ArrayList<String>();
   }
 
   public static OfferSearch newOfferSearch(Long searchRequestId, Long offerId) {
