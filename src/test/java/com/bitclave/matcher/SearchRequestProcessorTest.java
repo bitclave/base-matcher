@@ -4,6 +4,7 @@ import com.bitclave.matcher.models.Offer;
 import com.bitclave.matcher.models.OfferSearch;
 import com.bitclave.matcher.models.OfferSearchResultItem;
 import com.bitclave.matcher.models.SearchRequest;
+import com.bitclave.matcher.store.OfferSearchStore;
 import com.bitclave.matcher.store.OfferStore;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.After;
@@ -16,7 +17,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Collections;
 
 import static com.bitclave.matcher.models.OfferSearch.newOfferSearch;
 import static java.util.Collections.EMPTY_LIST;
@@ -37,6 +37,9 @@ public class SearchRequestProcessorTest {
 
   @Autowired
   private OfferStore offerStore;
+
+  @Autowired
+  private OfferSearchStore offerSearchStore;
 
   @Autowired
   private SearchRequestProcessor processor;
@@ -65,37 +68,20 @@ public class SearchRequestProcessorTest {
     Offer offer = new Offer(1L, "owner");
     OfferSearch offerSearch = newOfferSearch(request.getId(), offer.getId());
 
+    doReturn(false).when(offerSearchStore).exists(any());
     doReturn(Arrays.asList(offer)).when(offerStore).search(any());
-    doReturn(Collections.EMPTY_LIST).when(baseClient).findOfferSearch(request.getId());
     processor.process(Arrays.asList(request));
 
     verify(baseClient).saveOfferSearch(Arrays.asList(offerSearch));
   }
 
   @Test
-  public void processorSavesOfferSearchOnlyIfExistingOneIsDifferent() {
-    SearchRequest request = new SearchRequest(1L, "owner");
-    Offer offer = new Offer(1L, "owner");
-    OfferSearch newOfferSearch = newOfferSearch(request.getId(), offer.getId());
-    OfferSearch offerSearch = newOfferSearch(request.getId(), 2L);
-    OfferSearchResultItem existingOfferSearch = new OfferSearchResultItem(offerSearch, offer);
-
-    doReturn(Arrays.asList(offer)).when(offerStore).search(any());
-    doReturn(Arrays.asList(existingOfferSearch)).when(baseClient).findOfferSearch(request.getId());
-    processor.process(Arrays.asList(request));
-
-    verify(baseClient).saveOfferSearch(Arrays.asList(newOfferSearch));
-  }
-
-  @Test
   public void processorSkipsOfferSearchIfAlreadyExists() {
     SearchRequest request = new SearchRequest(1L, "owner");
     Offer offer = new Offer(1L, "owner");
-    OfferSearch offerSearch = newOfferSearch(request.getId(), offer.getId());
-    OfferSearchResultItem existingOfferSearch = new OfferSearchResultItem(offerSearch, offer);
 
     doReturn(Arrays.asList(offer)).when(offerStore).search(any());
-    doReturn(Arrays.asList(existingOfferSearch)).when(baseClient).findOfferSearch(request.getId());
+    doReturn(true).when(offerSearchStore).exists(any());
 
     processor.process(Arrays.asList(request));
 
@@ -112,7 +98,6 @@ public class SearchRequestProcessorTest {
     OfferSearchResultItem existingOfferSearch = new OfferSearchResultItem(offerSearch, offer);
 
     doReturn(Arrays.asList(offer)).when(offerStore).search(any());
-    doReturn(Arrays.asList(existingOfferSearch)).when(baseClient).findOfferSearch(request.getId());
 
     processor.process(Arrays.asList(request));
 

@@ -1,13 +1,8 @@
 package com.bitclave.matcher;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
-import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
-
-import java.util.List;
-
 import com.bitclave.matcher.models.Offer;
 import com.bitclave.matcher.models.SearchRequest;
+import com.bitclave.matcher.store.OfferSearchStore;
 import com.bitclave.matcher.store.OfferStore;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
@@ -20,6 +15,12 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
+import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
 @RunWith(SpringRunner.class)
 @RestClientTest(BaseClient.class)
@@ -38,6 +39,9 @@ public class BaseClientTest {
 
   @Autowired
   private OfferStore offerStore;
+
+  @Autowired
+  private OfferSearchStore offerSearchStore;
 
   @Before
   public void setUp() throws Exception {

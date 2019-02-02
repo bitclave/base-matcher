@@ -1,5 +1,6 @@
 package com.bitclave.matcher;
 
+import com.bitclave.matcher.store.OfferSearchStore;
 import com.bitclave.matcher.store.OfferStore;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,6 +25,10 @@ public class MatcherTestConfiguration {
   public OfferStore offerStore() {
     return Mockito.mock(OfferStore.class);
   }
+
+  @Bean
+  @Primary
+  public OfferSearchStore offerSearchStore() { return Mockito.mock(OfferSearchStore.class); }
 
   @Bean
   @Primary

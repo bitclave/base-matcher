@@ -1,10 +1,10 @@
 package com.bitclave.matcher.models;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Value;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Value
 @JsonIgnoreProperties(ignoreUnknown = true)

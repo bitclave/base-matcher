@@ -26,6 +26,8 @@ repositories {
 dependencies {
     compile('org.projectlombok:lombok')
     compile("org.springframework:spring-web")
+    compile("org.springframework.data:spring-data-commons")
+    compile("org.springframework.hateoas:spring-hateoas:0.25.0.RELEASE")
     compile('org.springframework.boot:spring-boot-starter-quartz')
     compile("com.fasterxml.jackson.core:jackson-databind")
 
