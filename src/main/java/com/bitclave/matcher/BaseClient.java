@@ -50,7 +50,7 @@ public class BaseClient {
     boolean pageThrough = true;
     Map<String, Integer> params = new HashMap<>();
     params.put("page", 0);
-    params.put("size", 1);
+    params.put("size", 20);
 
     while(pageThrough) {
       ResponseEntity<PagedResponse<Offer>> offerResponse =
@@ -61,7 +61,6 @@ public class BaseClient {
       allOffers.addAll(offerResponse.getBody().getContent());
       pageThrough = offerResponse.getBody().hasNext();
       params.put("page", params.get("page") + 1);
-      log.info("Offers paged response:" + offerResponse);
     }
     return allOffers;
   }
@@ -71,7 +70,7 @@ public class BaseClient {
     boolean pageThrough = true;
     Map<String, Integer> params = new HashMap<>();
     params.put("page", 0);
-    params.put("size", 1);
+    params.put("size", 20);
 
     while(pageThrough) {
       ResponseEntity<PagedResponse<OfferSearch>> offerSearchResponse =
@@ -82,7 +81,6 @@ public class BaseClient {
       allOfferSearches.addAll(offerSearchResponse.getBody().getContent());
       pageThrough = offerSearchResponse.getBody().hasNext();
       params.put("page", params.get("page") + 1);
-      log.info("OfferSearches paged response:" + offerSearchResponse);
     }
     return allOfferSearches;
   }
@@ -92,18 +90,17 @@ public class BaseClient {
     boolean pageThrough = true;
     Map<String, Integer> params = new HashMap<>();
     params.put("page", 0);
-    params.put("size", 1);
+    params.put("size", 20);
 
     while(pageThrough) {
       ResponseEntity<PagedResponse<SearchRequest>> searchRequestResponse =
-              restTemplate.exchange("/v1/search/requests?page={page}&size=2{size}",
+              restTemplate.exchange("/v1/search/requests?page={page}&size={size}",
                       HttpMethod.GET, null,
                       new ParameterizedTypeReference<PagedResponse<SearchRequest>>() {}, params);
 
       allRequests.addAll(searchRequestResponse.getBody().getContent());
       pageThrough = searchRequestResponse.getBody().hasNext();
       params.put("page", params.get("page") + 1);
-      log.info("SearchRequests paged response:" + searchRequestResponse);
     }
     return allRequests;
   }

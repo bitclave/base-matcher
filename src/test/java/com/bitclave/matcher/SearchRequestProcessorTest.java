@@ -97,6 +97,7 @@ public class SearchRequestProcessorTest {
     OfferSearch offerSearch = new ObjectMapper().readValue(offerSearchStr, OfferSearch.class);
     OfferSearchResultItem existingOfferSearch = new OfferSearchResultItem(offerSearch, offer);
 
+    doReturn(true).when(offerSearchStore).exists(any());
     doReturn(Arrays.asList(offer)).when(offerStore).search(any());
 
     processor.process(Arrays.asList(request));

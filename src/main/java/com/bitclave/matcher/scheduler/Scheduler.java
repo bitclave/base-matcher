@@ -30,7 +30,7 @@ public class Scheduler {
   @Autowired
   private OfferSearchStore offerSearchStore;
 
-  @Scheduled(fixedDelay = 5000)
+  @Scheduled(fixedDelay = 120000)
   public void matchingCycle() {
     log.info("Matching cycle - Begin");
 
@@ -41,7 +41,7 @@ public class Scheduler {
     log.info("Fetched offer searches  " + offerSearches);
 
     List<SearchRequest> requests = baseRepository.searchRequests();
-    log.info("Found " + requests.size() + " to process");
+    log.info("Found " + requests.size() + " search requests to process");
     requestProcessor.process(requests);
 
     log.info("Matching cycle - End");

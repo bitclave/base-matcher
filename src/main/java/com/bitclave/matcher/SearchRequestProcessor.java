@@ -40,6 +40,9 @@ public class SearchRequestProcessor {
         .flatMap(this::match)
         .collect(toList());
 
+    log.info("Found matched requests: " + offerSearches.size());
+
+    log.info("Filtering existing offer searches....");
     // skip offerSearches that are already saved
     List<OfferSearch> newOfferSearches = offerSearches.stream()
             .filter(notExists()).collect(toList());
@@ -47,6 +50,8 @@ public class SearchRequestProcessor {
     if (!newOfferSearches.isEmpty()) {
       log.info("Saving " + newOfferSearches.size() + " to base-node");
       baseRepository.saveOfferSearch(newOfferSearches);
+    } else {
+      log.info("No new offer searches to be saved....");
     }
   }
 
