@@ -18,6 +18,7 @@ public class InMemoryOfferSearchStore implements OfferSearchStore {
 
     @Override
     public int insert(List<OfferSearch> offerSearches) {
+        store.clear();
         offerSearches.forEach(offerSearch -> {
             List<OfferSearch> searches = store.getOrDefault(offerSearch.getSearchRequestId(), new ArrayList<>());
             searches.add(offerSearch);
