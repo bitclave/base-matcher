@@ -1,13 +1,8 @@
 package com.bitclave.matcher;
 
-import static com.bitclave.matcher.models.SignedRequest.newSignedRequest;
-
-import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
-
 import com.bitclave.matcher.models.Offer;
 import com.bitclave.matcher.models.OfferSearch;
-import com.bitclave.matcher.models.OfferSearchResultItem;
+import com.bitclave.matcher.models.PagedResponse;
 import com.bitclave.matcher.models.SearchRequest;
 import com.bitclave.matcher.models.SignedRequest;
 import org.slf4j.Logger;
@@ -21,6 +16,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
+
+import static com.bitclave.matcher.models.SignedRequest.newSignedRequest;
 
 @Service
 public class BaseClient {
@@ -43,19 +46,63 @@ public class BaseClient {
   }
 
   public List<Offer> offers() {
-    ResponseEntity<List<Offer>> rateResponse =
-        restTemplate.exchange("/v1/client/0x0/offer/",
-            HttpMethod.GET, null, new ParameterizedTypeReference<List<Offer>>() {
-            });
-    return rateResponse.getBody();
+    List<Offer> allOffers = new ArrayList<>();
+    boolean pageThrough = true;
+    Map<String, Integer> params = new HashMap<>();
+    params.put("page", 0);
+    params.put("size", 20);
+
+    while(pageThrough) {
+      ResponseEntity<PagedResponse<Offer>> offerResponse =
+              restTemplate.exchange("/v1/offers?page={page}&size={size}",
+                      HttpMethod.GET, null,
+                      new ParameterizedTypeReference<PagedResponse<Offer>>() {}, params);
+
+      allOffers.addAll(offerResponse.getBody().getContent());
+      pageThrough = offerResponse.getBody().hasNext();
+      params.put("page", params.get("page") + 1);
+    }
+    return allOffers;
+  }
+
+  public List<OfferSearch> offerSearches() {
+    List<OfferSearch> allOfferSearches = new ArrayList<>();
+    boolean pageThrough = true;
+    Map<String, Integer> params = new HashMap<>();
+    params.put("page", 0);
+    params.put("size", 20);
+
+    while(pageThrough) {
+      ResponseEntity<PagedResponse<OfferSearch>> offerSearchResponse =
+              restTemplate.exchange("/v1/search/results?page={page}&size={size}",
+                      HttpMethod.GET, null,
+                      new ParameterizedTypeReference<PagedResponse<OfferSearch>>() {}, params);
+
+      allOfferSearches.addAll(offerSearchResponse.getBody().getContent());
+      pageThrough = offerSearchResponse.getBody().hasNext();
+      params.put("page", params.get("page") + 1);
+    }
+    return allOfferSearches;
   }
 
   public List<SearchRequest> searchRequests() {
-    ResponseEntity<List<SearchRequest>> rateResponse =
-        restTemplate.exchange("/v1/client/0x0/search/request/",
-            HttpMethod.GET, null, new ParameterizedTypeReference<List<SearchRequest>>() {
-            });
-    return rateResponse.getBody();
+    List<SearchRequest> allRequests = new ArrayList<>();
+    boolean pageThrough = true;
+    Map<String, Integer> params = new HashMap<>();
+    params.put("page", 0);
+    params.put("size", 20);
+
+    while(pageThrough) {
+      ResponseEntity<PagedResponse<SearchRequest>> searchRequestResponse =
+              restTemplate.exchange("/v1/search/requests?page={page}&size={size}",
+                      HttpMethod.GET, null,
+                      new ParameterizedTypeReference<PagedResponse<SearchRequest>>() {}, params);
+
+      allRequests.addAll(searchRequestResponse.getBody().getContent());
+      pageThrough = searchRequestResponse.getBody().hasNext();
+      params.put("page", params.get("page") + 1);
+    }
+    return allRequests;
   }
 
   public void saveOfferSearch(List<OfferSearch> offerSearches) {
@@ -84,15 +131,6 @@ public class BaseClient {
     log.info("Saving offerSearch to BASE: {}", signedRequest.toString());
     HttpEntity<SignedRequest> request = new HttpEntity<>(signedRequest);
     return restTemplate.exchange("/v1/search/result", HttpMethod.POST, request, OfferSearch.class);
-  }
-
-  public List<OfferSearchResultItem> findOfferSearch(Long searchRequestId) {
-    ResponseEntity<List<OfferSearchResultItem>>
-        offerSearchResponse =
-        restTemplate.exchange("/v1/search/result/?searchRequestId=" + searchRequestId,
-            HttpMethod.GET, null, new ParameterizedTypeReference<List<OfferSearchResultItem>>() {
-            });
-    return offerSearchResponse.getBody();
   }
 
   public long getNonce() {

@@ -1,11 +1,11 @@
 package com.bitclave.matcher.models;
 
-import java.math.BigInteger;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import lombok.Data;
 import org.bitcoinj.core.ECKey;
+
+import java.math.BigInteger;
 
 @Data
 public class SignedRequest<T> {

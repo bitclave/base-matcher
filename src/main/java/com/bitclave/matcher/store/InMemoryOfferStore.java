@@ -1,16 +1,16 @@
 package com.bitclave.matcher.store;
 
-import static java.util.stream.Collectors.toList;
+import com.bitclave.matcher.models.Offer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Repository;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.bitclave.matcher.models.Offer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Repository;
+import static java.util.stream.Collectors.toList;
 
 @Repository
 public class InMemoryOfferStore implements OfferStore {
