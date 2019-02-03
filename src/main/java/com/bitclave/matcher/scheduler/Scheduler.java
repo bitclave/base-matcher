@@ -30,7 +30,7 @@ public class Scheduler {
   @Autowired
   private OfferSearchStore offerSearchStore;
 
-  @Scheduled(fixedDelay = 120000)
+  @Scheduled(fixedDelay = 5000)
   public void matchingCycle() {
     log.info("Matching cycle - Begin");
 

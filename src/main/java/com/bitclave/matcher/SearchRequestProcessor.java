@@ -47,7 +47,6 @@ public class SearchRequestProcessor {
     if (!newOfferSearches.isEmpty()) {
       log.info("Saving " + newOfferSearches.size() + " to base-node");
       baseRepository.saveOfferSearch(newOfferSearches);
-      offerSearchStore.insert(newOfferSearches);
     }
   }
 
