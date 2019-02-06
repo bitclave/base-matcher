@@ -10,6 +10,7 @@ import java.util.Date;
 @Value
 public class OfferSearch {
   private Long id = 0L;
+  private String owner;
   private Long searchRequestId;
   private Long offerId;
   @JsonDeserialize(using = OfferSearchActionDeserializer.class)
@@ -20,6 +21,7 @@ public class OfferSearch {
 
 
   private OfferSearch(Long searchRequestId, Long offerId) {
+    this.owner = "0x0";
     this.searchRequestId = searchRequestId;
     this.offerId = offerId;
     this.lastUpdated = new Date().toString();
