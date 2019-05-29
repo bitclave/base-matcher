@@ -123,7 +123,7 @@ public class BaseClient {
           }
         } while (retries > 0);
       } catch (Exception e) {
-          log.error("saveOfferSearch exception: $e");
+          log.error("saveOfferSearch exception: {}", e.toString());
       }
     }
   }
