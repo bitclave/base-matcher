@@ -111,16 +111,20 @@ public class BaseClient {
     }
     AtomicLong nonce = new AtomicLong(getNonce());
     for (OfferSearch offerSearch : offerSearches) {
-      int retries = 3;
-      do {
-        ResponseEntity<OfferSearch> result = saveOfferSearch(nonce, offerSearch);
-        if (result.getStatusCode() == HttpStatus.CREATED) {
-          break;
-        } else {
-          retries--;
-          nonce = new AtomicLong(getNonce()); //see if nonce needs to be fetched again
-        }
-      } while(retries > 0);
+      try {
+        int retries = 3;
+        do {
+          ResponseEntity<OfferSearch> result = saveOfferSearch(nonce, offerSearch);
+          if (result.getStatusCode() == HttpStatus.CREATED) {
+            break;
+          } else {
+            retries--;
+            nonce = new AtomicLong(getNonce()); //see if nonce needs to be fetched again
+          }
+        } while (retries > 0);
+      } catch (Exception e) {
+          log.error("saveOfferSearch exception: $e");
+      }
     }
   }
 
