@@ -16,7 +16,7 @@ public class SignedRequest<T> {
   private Long nonce = 0L;
 
   public static <T> SignedRequest<T> newSignedRequest(T data, String publicKey, long nonce) {
-    SignedRequest<T> request = new SignedRequest();
+    SignedRequest<T> request = new SignedRequest<>();
     request.data = data;
     request.pk = publicKey;
     request.nonce = nonce;

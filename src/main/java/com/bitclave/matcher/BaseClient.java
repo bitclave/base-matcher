@@ -5,6 +5,7 @@ import com.bitclave.matcher.models.OfferSearch;
 import com.bitclave.matcher.models.PagedResponse;
 import com.bitclave.matcher.models.SearchRequest;
 import com.bitclave.matcher.models.SignedRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
@@ -122,23 +124,41 @@ public class BaseClient {
             nonce = new AtomicLong(getNonce()); //see if nonce needs to be fetched again
           }
         } while (retries > 0);
-      } catch (Exception e) {
-          log.error("saveOfferSearch exception: {}", e.toString());
+      } catch (Throwable e) {
+        log.error("saveOfferSearch exception: {}", e.toString());
       }
     }
   }
 
   private ResponseEntity<OfferSearch> saveOfferSearch(AtomicLong nonce, OfferSearch offerSearch) {
-    SignedRequest<OfferSearch>
-        signedRequest = newSignedRequest(offerSearch, publicKey, nonce.incrementAndGet());
+    final SignedRequest<OfferSearch> signedRequest = newSignedRequest(offerSearch, publicKey, nonce.incrementAndGet());
     signedRequest.signMessage(privateKey);
+
     log.info("Saving offerSearch to BASE: {}", signedRequest.toString());
-    HttpEntity<SignedRequest> request = new HttpEntity<>(signedRequest);
-    return restTemplate.exchange("/v1/search/result", HttpMethod.POST, request, OfferSearch.class);
+    final HttpEntity<SignedRequest> request = new HttpEntity<>(signedRequest);
+
+    try {
+      return restTemplate.exchange("/v1/search/result", HttpMethod.POST, request, OfferSearch.class);
+
+    } catch (HttpClientErrorException e) {
+      log.warn("saveOfferSearch", e);
+
+      return ResponseEntity
+        .badRequest()
+        .build();
+    }
   }
 
   public long getNonce() {
-    Long nonce = restTemplate.getForObject("/v1/nonce/" + publicKey, Long.class);
-    return nonce.longValue();
+    try {
+      final Long nonce = restTemplate.getForObject("/v1/nonce/" + publicKey, long.class);
+
+      return nonce != null ? nonce : -1;
+
+    } catch (Throwable e) {
+      log.error("getNonce", e);
+    }
+
+    return -1;
   }
 }
