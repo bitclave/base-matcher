@@ -11,5 +11,5 @@ import java.util.Map;
 public class SearchRequest {
   private Long id;
   private String owner;
-  private Map<String, String> tags = new HashMap();
+  private Map<String, String> tags = new HashMap<>();
 }
