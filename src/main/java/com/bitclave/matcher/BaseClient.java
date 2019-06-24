@@ -52,7 +52,7 @@ public class BaseClient {
     boolean pageThrough = true;
     Map<String, Integer> params = new HashMap<>();
     params.put("page", 0);
-    params.put("size", 1100);
+    params.put("size", 20);
 
     while(pageThrough) {
       ResponseEntity<PagedResponse<Offer>> offerResponse =
