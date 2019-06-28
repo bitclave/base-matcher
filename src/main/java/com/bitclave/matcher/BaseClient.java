@@ -56,7 +56,7 @@ public class BaseClient {
 
     while(pageThrough) {
       ResponseEntity<PagedResponse<Offer>> offerResponse =
-              restTemplate.exchange("/v1/offers?page={page}&size={size}",
+              restTemplate.exchange("/v1/offers/matcher?page={page}&size={size}",
                       HttpMethod.GET, null,
                       new ParameterizedTypeReference<PagedResponse<Offer>>() {}, params);
 
