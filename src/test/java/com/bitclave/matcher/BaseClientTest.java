@@ -63,7 +63,7 @@ public class BaseClientTest {
 
     String offerString = objectMapper.writeValueAsString(pagedResponse);
 
-    this.server.expect(requestTo("http://localhost/v1/offers?page=0&size=20"))
+    this.server.expect(requestTo("http://localhost/v1/offers?page=0&size=1100"))
         .andRespond(withSuccess(offerString, MediaType.APPLICATION_JSON));
 
     List<Offer> offers = client.offers();
@@ -85,7 +85,7 @@ public class BaseClientTest {
     String searchRequestString =
         objectMapper.writeValueAsString(pagedResponse);
 
-    this.server.expect(requestTo("http://localhost/v1/search/requests?page=0&size=20"))
+    this.server.expect(requestTo("http://localhost/v1/search/requests?page=0&size=1100"))
         .andRespond(withSuccess(searchRequestString, MediaType.APPLICATION_JSON));
 
     List<SearchRequest> requests = client.searchRequests();
