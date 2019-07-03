@@ -16,7 +16,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
@@ -118,20 +118,16 @@ public class BaseClient {
     }
     AtomicLong nonce = new AtomicLong(getNonce());
     for (OfferSearch offerSearch : offerSearches) {
-      try {
-        int retries = 3;
-        do {
-          ResponseEntity<OfferSearch> result = saveOfferSearch(nonce, offerSearch);
-          if (result.getStatusCode() == HttpStatus.CREATED) {
-            break;
-          } else {
-            retries--;
-            nonce = new AtomicLong(getNonce()); //see if nonce needs to be fetched again
-          }
-        } while (retries > 0);
-      } catch (Throwable e) {
-        log.error("saveOfferSearch exception: {}", e.toString());
-      }
+      int retries = 3;
+      do {
+        ResponseEntity<OfferSearch> result = saveOfferSearch(nonce, offerSearch);
+        if (result.getStatusCode() == HttpStatus.CREATED) {
+          break;
+        } else {
+          retries--;
+          nonce = new AtomicLong(getNonce()); //see if nonce needs to be fetched again
+        }
+      } while (retries > 0);
     }
   }
 
@@ -145,7 +141,7 @@ public class BaseClient {
     try {
       return restTemplate.exchange("/v1/search/result", HttpMethod.POST, request, OfferSearch.class);
 
-    } catch (HttpClientErrorException e) {
+    } catch (HttpServerErrorException e) {
       log.warn("saveOfferSearch", e);
 
       return ResponseEntity
