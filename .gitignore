@@ -52,3 +52,5 @@ bin
 # Other
 *.swp
 *.bak
+
+local.properties
