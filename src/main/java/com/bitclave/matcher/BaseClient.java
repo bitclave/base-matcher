@@ -85,9 +85,9 @@ public class BaseClient {
       params.put("page", params.get("page") + 1);
 
       // temp workaround to limit the number of pages till we resolve BASE-760
-      if ((params.get("page") * params.get("size"))> 500000) {
-        pageThrough = false;
-      }
+//      if ((params.get("page") * params.get("size"))> 500000) {
+//        pageThrough = false;
+//      }
     }
     return allOfferSearches;
   }
