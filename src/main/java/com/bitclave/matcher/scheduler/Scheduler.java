@@ -5,10 +5,10 @@ import com.bitclave.matcher.SearchRequestProcessor;
 import com.bitclave.matcher.models.SearchRequest;
 import com.bitclave.matcher.store.OfferSearchStore;
 import com.bitclave.matcher.store.OfferStore;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -30,7 +30,7 @@ public class Scheduler {
   @Autowired
   private OfferSearchStore offerSearchStore;
 
-  @Scheduled(fixedDelay = 60*1000)
+  //  @Scheduled(fixedDelay = 60*1000)
   public void matchingCycle() {
     log.info("Matching cycle - Begin");
 
