@@ -1,7 +1,7 @@
 package com.bitclave.matcher;
 
 import com.bitclave.matcher.models.Offer;
-import com.bitclave.matcher.models.PagedResponse;
+import com.bitclave.matcher.models.SliceResponse;
 import com.bitclave.matcher.models.SearchRequest;
 import com.bitclave.matcher.store.OfferSearchStore;
 import com.bitclave.matcher.store.OfferStore;
@@ -57,11 +57,11 @@ public class BaseClientTest {
     List<Offer> content = new ArrayList<>();
     content.add(offer);
 
-    PagedResponse pagedResponse = new
-            PagedResponse(content, 0, 1, 1L, null,
+    SliceResponse sliceResponse = new
+      SliceResponse(content, 0, 1, 1L, null,
             false, 1, null, true, 1);
 
-    String offerString = objectMapper.writeValueAsString(pagedResponse);
+    String offerString = objectMapper.writeValueAsString(sliceResponse);
 
     this.server.expect(requestTo("http://localhost/v1/offers?page=0&size=1100"))
         .andRespond(withSuccess(offerString, MediaType.APPLICATION_JSON));
@@ -78,12 +78,12 @@ public class BaseClientTest {
     List<SearchRequest> content = new ArrayList<>();
     content.add(searchRequest);
 
-    PagedResponse pagedResponse = new
-            PagedResponse(content, 0, 1, 1L, null,
+    SliceResponse sliceResponse = new
+      SliceResponse(content, 0, 1, 1L, null,
             false, 1, null, true, 1);
 
     String searchRequestString =
-        objectMapper.writeValueAsString(pagedResponse);
+        objectMapper.writeValueAsString(sliceResponse);
 
     this.server.expect(requestTo("http://localhost/v1/search/requests?page=0&size=1100"))
         .andRespond(withSuccess(searchRequestString, MediaType.APPLICATION_JSON));
