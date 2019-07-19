@@ -32,9 +32,10 @@ dependencies {
 
     compile 'com.google.code.gson:gson:2.8.2'
     compile 'org.bitcoinj:bitcoinj-core:0.14.5'
-
+    
+    testCompile("net.bytebuddy:byte-buddy-agent:1.9.10")
     testCompile("junit:junit")
-    testCompile("org.mockito:mockito-core")
+    testCompile("org.mockito:mockito-core:2.23.0")
     testCompile("org.assertj:assertj-core")
     testCompile('org.springframework.boot:spring-boot-starter-test')
 }
