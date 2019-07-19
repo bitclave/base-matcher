@@ -5,6 +5,7 @@ import com.bitclave.matcher.SearchRequestProcessor;
 import com.bitclave.matcher.models.SearchRequest;
 import com.bitclave.matcher.store.OfferSearchStore;
 import com.bitclave.matcher.store.OfferStore;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

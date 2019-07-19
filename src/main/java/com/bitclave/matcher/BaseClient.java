@@ -2,9 +2,9 @@ package com.bitclave.matcher;
 
 import com.bitclave.matcher.models.Offer;
 import com.bitclave.matcher.models.OfferSearch;
-import com.bitclave.matcher.models.PagedResponse;
 import com.bitclave.matcher.models.SearchRequest;
 import com.bitclave.matcher.models.SignedRequest;
+import com.bitclave.matcher.models.SliceResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,10 +55,10 @@ public class BaseClient {
     params.put("size", 255);
 
     while(pageThrough) {
-      ResponseEntity<PagedResponse<Offer>> offerResponse =
-              restTemplate.exchange("/v1/offers/matcher?page={page}&size={size}",
+      ResponseEntity<SliceResponse<Offer>> offerResponse =
+              restTemplate.exchange("/v1/consumers/offers?page={page}&size={size}",
                       HttpMethod.GET, null,
-                      new ParameterizedTypeReference<PagedResponse<Offer>>() {}, params);
+                      new ParameterizedTypeReference<SliceResponse<Offer>>() {}, params);
 
       allOffers.addAll(offerResponse.getBody().getContent());
       pageThrough = offerResponse.getBody().hasNext();
@@ -75,10 +75,10 @@ public class BaseClient {
     params.put("size", 255);
 
     while(pageThrough) {
-      ResponseEntity<PagedResponse<OfferSearch>> offerSearchResponse =
-              restTemplate.exchange("/v1/search/results?page={page}&size={size}",
+      ResponseEntity<SliceResponse<OfferSearch>> offerSearchResponse =
+              restTemplate.exchange("/v1/consumers/search/results?page={page}&size={size}",
                       HttpMethod.GET, null,
-                      new ParameterizedTypeReference<PagedResponse<OfferSearch>>() {}, params);
+                      new ParameterizedTypeReference<SliceResponse<OfferSearch>>() {}, params);
 
       allOfferSearches.addAll(offerSearchResponse.getBody().getContent());
       pageThrough = offerSearchResponse.getBody().hasNext();
@@ -100,10 +100,10 @@ public class BaseClient {
     params.put("size", 255);
 
     while(pageThrough) {
-      ResponseEntity<PagedResponse<SearchRequest>> searchRequestResponse =
-              restTemplate.exchange("/v1/search/requests?page={page}&size={size}",
+      ResponseEntity<SliceResponse<SearchRequest>> searchRequestResponse =
+              restTemplate.exchange("/v1/consumers/search/requests?page={page}&size={size}",
                       HttpMethod.GET, null,
-                      new ParameterizedTypeReference<PagedResponse<SearchRequest>>() {}, params);
+                      new ParameterizedTypeReference<SliceResponse<SearchRequest>>() {}, params);
 
       allRequests.addAll(searchRequestResponse.getBody().getContent());
       pageThrough = searchRequestResponse.getBody().hasNext();
