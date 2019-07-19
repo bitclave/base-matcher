@@ -2,11 +2,10 @@ package com.bitclave.matcher;
 
 import com.bitclave.matcher.models.Offer;
 import com.bitclave.matcher.models.OfferSearch;
-import com.bitclave.matcher.models.OfferSearchResultItem;
 import com.bitclave.matcher.models.SearchRequest;
 import com.bitclave.matcher.store.OfferSearchStore;
 import com.bitclave.matcher.store.OfferStore;
-import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -92,10 +91,6 @@ public class SearchRequestProcessorTest {
   public void processorHandlesUnknownFieldsInOfferSearch() throws IOException {
     SearchRequest request = new SearchRequest(1L, "owner");
     Offer offer = new Offer(1L, "owner");
-
-    String offerSearchStr = "{\"offerId\":1, \"searchRequestId\": 1, \"state\": \"XXXXXX\"}";
-    OfferSearch offerSearch = new ObjectMapper().readValue(offerSearchStr, OfferSearch.class);
-    OfferSearchResultItem existingOfferSearch = new OfferSearchResultItem(offerSearch, offer);
 
     doReturn(true).when(offerSearchStore).exists(any());
     doReturn(Arrays.asList(offer)).when(offerStore).search(any());

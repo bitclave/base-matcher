@@ -3,8 +3,6 @@ package com.bitclave.matcher;
 import com.bitclave.matcher.models.Offer;
 import com.bitclave.matcher.models.SliceResponse;
 import com.bitclave.matcher.models.SearchRequest;
-import com.bitclave.matcher.store.OfferSearchStore;
-import com.bitclave.matcher.store.OfferStore;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
@@ -39,12 +37,6 @@ public class BaseClientTest {
   @Autowired
   private ObjectMapper objectMapper;
 
-  @Autowired
-  private OfferStore offerStore;
-
-  @Autowired
-  private OfferSearchStore offerSearchStore;
-
   @Before
   public void setUp() throws Exception {
     this.server = MockRestServiceServer.bindTo(restTemplate).build();
@@ -57,13 +49,10 @@ public class BaseClientTest {
     List<Offer> content = new ArrayList<>();
     content.add(offer);
 
-    SliceResponse sliceResponse = new
-      SliceResponse(content, 0, 1, 1L, null,
-            false, 1, null, true, 1);
-
+    SliceResponse sliceResponse = new SliceResponse(content, 0, 1, null, false, true, true, 1);
     String offerString = objectMapper.writeValueAsString(sliceResponse);
 
-    this.server.expect(requestTo("http://localhost/v1/offers?page=0&size=1100"))
+    this.server.expect(requestTo("http://localhost/v1/consumers/offers?page=0&size=255"))
         .andRespond(withSuccess(offerString, MediaType.APPLICATION_JSON));
 
     List<Offer> offers = client.offers();
@@ -78,14 +67,12 @@ public class BaseClientTest {
     List<SearchRequest> content = new ArrayList<>();
     content.add(searchRequest);
 
-    SliceResponse sliceResponse = new
-      SliceResponse(content, 0, 1, 1L, null,
-            false, 1, null, true, 1);
+    SliceResponse sliceResponse = new SliceResponse(content, 0, 1, null, false, true, true, 1);
 
     String searchRequestString =
         objectMapper.writeValueAsString(sliceResponse);
 
-    this.server.expect(requestTo("http://localhost/v1/search/requests?page=0&size=1100"))
+    this.server.expect(requestTo("http://localhost/v1/consumers/search/requests?page=0&size=255"))
         .andRespond(withSuccess(searchRequestString, MediaType.APPLICATION_JSON));
 
     List<SearchRequest> requests = client.searchRequests();
