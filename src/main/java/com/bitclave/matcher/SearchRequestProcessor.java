@@ -45,7 +45,7 @@ public class SearchRequestProcessor {
     log.info("Filtering existing offer searches....");
     // skip offerSearches that are already saved
     List<OfferSearch> newOfferSearches = offerSearches.stream()
-            .filter(notExists()).collect(toList());
+        .filter(notExists()).collect(toList());
 
     if (!newOfferSearches.isEmpty()) {
       log.info("Saving " + newOfferSearches.size() + " to base-node");

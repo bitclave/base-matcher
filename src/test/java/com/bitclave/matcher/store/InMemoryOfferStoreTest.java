@@ -1,15 +1,15 @@
 package com.bitclave.matcher.store;
 
-import static java.util.stream.Collectors.toList;
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.util.Arrays;
-import java.util.List;
-
 import com.bitclave.matcher.models.Offer;
 import com.bitclave.matcher.models.SearchRequest;
 import org.junit.Ignore;
 import org.junit.Test;
+
+import java.util.Arrays;
+import java.util.List;
+
+import static java.util.stream.Collectors.toList;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class InMemoryOfferStoreTest {
 

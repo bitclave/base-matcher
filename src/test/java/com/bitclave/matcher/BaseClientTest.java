@@ -1,8 +1,8 @@
 package com.bitclave.matcher;
 
 import com.bitclave.matcher.models.Offer;
-import com.bitclave.matcher.models.SliceResponse;
 import com.bitclave.matcher.models.SearchRequest;
+import com.bitclave.matcher.models.SliceResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;

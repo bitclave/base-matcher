@@ -1,11 +1,6 @@
 package com.bitclave.matcher;
 
-import com.bitclave.matcher.models.Offer;
-import com.bitclave.matcher.models.OfferSearch;
-import com.bitclave.matcher.models.SearchRequest;
-import com.bitclave.matcher.models.SignedRequest;
-import com.bitclave.matcher.models.SliceResponse;
-
+import com.bitclave.matcher.models.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,15 +55,15 @@ public class BaseClient {
     while (pageThrough) {
       try {
         ResponseEntity<SliceResponse<Offer>> offerResponse =
-          restTemplate.exchange("/v1/consumers/offers?page={page}&size={size}",
-            HttpMethod.GET, null,
-            new ParameterizedTypeReference<SliceResponse<Offer>>() {
-            }, params);
+            restTemplate.exchange("/v1/consumers/offers?page={page}&size={size}",
+                HttpMethod.GET, null,
+                new ParameterizedTypeReference<SliceResponse<Offer>>() {
+                }, params);
 
         allOffers.addAll(offerResponse.getBody()
-                                      .getContent());
+            .getContent());
         pageThrough = offerResponse.getBody()
-                                   .hasNext();
+            .hasNext();
         params.put("page", params.get("page") + 1);
         repeat = 0;
       } catch (Throwable e) {
@@ -93,15 +88,15 @@ public class BaseClient {
     while (pageThrough) {
       try {
         ResponseEntity<SliceResponse<OfferSearch>> offerSearchResponse =
-          restTemplate.exchange("/v1/consumers/search/results?page={page}&size={size}",
-            HttpMethod.GET, null,
-            new ParameterizedTypeReference<SliceResponse<OfferSearch>>() {
-            }, params);
+            restTemplate.exchange("/v1/consumers/search/results?page={page}&size={size}",
+                HttpMethod.GET, null,
+                new ParameterizedTypeReference<SliceResponse<OfferSearch>>() {
+                }, params);
 
         allOfferSearches.addAll(offerSearchResponse.getBody()
-                                                   .getContent());
+            .getContent());
         pageThrough = offerSearchResponse.getBody()
-                                         .hasNext();
+            .hasNext();
         params.put("page", params.get("page") + 1);
         repeat = 0;
         // temp workaround to limit the number of pages till we resolve BASE-760
@@ -131,15 +126,15 @@ public class BaseClient {
     while (pageThrough) {
       try {
         ResponseEntity<SliceResponse<SearchRequest>> searchRequestResponse =
-          restTemplate.exchange("/v1/consumers/search/requests?page={page}&size={size}",
-            HttpMethod.GET, null,
-            new ParameterizedTypeReference<SliceResponse<SearchRequest>>() {
-            }, params);
+            restTemplate.exchange("/v1/consumers/search/requests?page={page}&size={size}",
+                HttpMethod.GET, null,
+                new ParameterizedTypeReference<SliceResponse<SearchRequest>>() {
+                }, params);
 
         allRequests.addAll(searchRequestResponse.getBody()
-                                                .getContent());
+            .getContent());
         pageThrough = searchRequestResponse.getBody()
-                                           .hasNext();
+            .hasNext();
         params.put("page", params.get("page") + 1);
         repeat = 0;
 
@@ -175,7 +170,7 @@ public class BaseClient {
 
   private ResponseEntity<OfferSearch> saveOfferSearch(AtomicLong nonce, OfferSearch offerSearch) {
     final SignedRequest<OfferSearch> signedRequest = newSignedRequest(offerSearch, publicKey,
-      nonce.incrementAndGet());
+        nonce.incrementAndGet());
     signedRequest.signMessage(privateKey);
 
     log.info("Saving offerSearch to BASE: {}", signedRequest.toString());
@@ -188,8 +183,8 @@ public class BaseClient {
       log.warn("saveOfferSearch", e);
 
       return ResponseEntity
-        .badRequest()
-        .build();
+          .badRequest()
+          .build();
     }
   }
 
