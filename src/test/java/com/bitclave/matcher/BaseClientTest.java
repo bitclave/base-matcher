@@ -75,7 +75,10 @@ public class BaseClientTest {
     this.server.expect(requestTo("http://localhost/v1/consumers/search/requests?page=0&size=255"))
         .andRespond(withSuccess(searchRequestString, MediaType.APPLICATION_JSON));
 
-    List<SearchRequest> requests = client.searchRequests();
+    List<String> owners = new ArrayList<>();
+    owners.add(searchRequest.getOwner());
+
+    List<SearchRequest> requests = client.searchRequestsByOwners(owners);
     assertThat(requests).isNotNull();
     assertThat(requests).hasSize(1);
     assertThat(requests).contains(searchRequest);
