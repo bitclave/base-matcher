@@ -31,6 +31,7 @@ public class Offer {
     MORE(">"),
     LESS("<");
 
-    @Getter private String value;
+    @Getter
+    private String value;
   }
 }

@@ -28,7 +28,9 @@ public class MatcherTestConfiguration {
 
   @Bean
   @Primary
-  public OfferSearchStore offerSearchStore() { return Mockito.mock(OfferSearchStore.class); }
+  public OfferSearchStore offerSearchStore() {
+    return Mockito.mock(OfferSearchStore.class);
+  }
 
   @Bean
   @Primary

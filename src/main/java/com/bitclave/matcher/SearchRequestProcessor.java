@@ -8,6 +8,7 @@ import com.bitclave.matcher.store.OfferStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -31,12 +32,12 @@ public class SearchRequestProcessor {
   @Autowired
   private OfferSearchStore offerSearchStore;
 
-  public void process(List<SearchRequest> requests) {
+  public void process(@Nullable final List<SearchRequest> requests) {
     if (requests == null || requests.isEmpty()) {
       return;
     }
 
-    List<OfferSearch> offerSearches = requests.stream()
+    final List<OfferSearch> offerSearches = requests.stream()
         .flatMap(this::match)
         .collect(toList());
 
@@ -44,8 +45,8 @@ public class SearchRequestProcessor {
 
     log.info("Filtering existing offer searches....");
     // skip offerSearches that are already saved
-    List<OfferSearch> newOfferSearches = offerSearches.stream()
-            .filter(notExists()).collect(toList());
+    final List<OfferSearch> newOfferSearches = offerSearches.stream()
+        .filter(notExists()).collect(toList());
 
     if (!newOfferSearches.isEmpty()) {
       log.info("Saving " + newOfferSearches.size() + " to base-node");
@@ -60,7 +61,7 @@ public class SearchRequestProcessor {
   }
 
   private Stream<? extends OfferSearch> match(SearchRequest request) {
-    List<Offer> matches = offerStore.search(request.getTags());
+    final List<Offer> matches = offerStore.search(request.getTags());
     return matches.stream()
         .map(offer -> newOfferSearch(request.getId(), offer.getId()));
   }

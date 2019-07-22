@@ -1,8 +1,6 @@
 package com.bitclave.matcher.store;
 
 import com.bitclave.matcher.models.Offer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import java.util.Collections;
@@ -14,8 +12,6 @@ import static java.util.stream.Collectors.toList;
 
 @Repository
 public class InMemoryOfferStore implements OfferStore {
-  private static final Logger log = LoggerFactory.getLogger(InMemoryOfferStore.class);
-
   private List<Offer> EMPTY = Collections.emptyList();
   private Map<Long, Offer> store = new ConcurrentHashMap<>();
 
