@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -46,9 +47,9 @@ public class BaseClient {
 
   public List<Offer> offers() {
     int repeat = 0;
-    List<Offer> allOffers = new ArrayList<>();
+    final List<Offer> allOffers = new ArrayList<>();
     boolean pageThrough = true;
-    Map<String, Integer> params = new HashMap<>();
+    final Map<String, Integer> params = new HashMap<>();
     params.put("page", 0);
     params.put("size", 255);
 
@@ -77,11 +78,37 @@ public class BaseClient {
     return allOffers;
   }
 
-  public List<OfferSearch> offerSearches() {
+  public Slice<Account> accounts(@NonNull final Integer page, @NonNull final Integer size) {
     int repeat = 0;
-    List<OfferSearch> allOfferSearches = new ArrayList<>();
+    final Map<String, Integer> params = new HashMap<>();
+    params.put("page", page);
+    params.put("size", size);
+
+    while (true) {
+      try {
+        ResponseEntity<SliceResponse<Account>> accountResponse =
+            restTemplate.exchange("/v1/consumers/accounts?page={page}&size={size}",
+                HttpMethod.GET, null,
+                new ParameterizedTypeReference<SliceResponse<Account>>() {
+                }, params);
+
+        return accountResponse.getBody();
+
+      } catch (Throwable e) {
+        repeat++;
+        log.warn("accounts", e);
+        if (repeat > MAX_REPEAT_COUNT) {
+          throw e;
+        }
+      }
+    }
+  }
+
+  public List<OfferSearch> offerSearchesByOwners(@NonNull final List<String> owners) {
+    int repeat = 0;
+    final List<OfferSearch> allOfferSearches = new ArrayList<>();
     boolean pageThrough = true;
-    Map<String, Integer> params = new HashMap<>();
+    final Map<String, Integer> params = new HashMap<>();
     params.put("page", 0);
     params.put("size", 255);
 
@@ -89,7 +116,7 @@ public class BaseClient {
       try {
         ResponseEntity<SliceResponse<OfferSearch>> offerSearchResponse =
             restTemplate.exchange("/v1/consumers/search/results?page={page}&size={size}",
-                HttpMethod.GET, null,
+                HttpMethod.POST, new HttpEntity<>(owners),
                 new ParameterizedTypeReference<SliceResponse<OfferSearch>>() {
                 }, params);
 
@@ -97,12 +124,9 @@ public class BaseClient {
             .getContent());
         pageThrough = offerSearchResponse.getBody()
             .hasNext();
+
         params.put("page", params.get("page") + 1);
         repeat = 0;
-        // temp workaround to limit the number of pages till we resolve BASE-760
-//      if ((params.get("page") * params.get("size"))> 500000) {
-//        pageThrough = false;
-//      }
 
       } catch (Throwable e) {
         repeat++;
@@ -115,11 +139,11 @@ public class BaseClient {
     return allOfferSearches;
   }
 
-  public List<SearchRequest> searchRequests() {
+  public List<SearchRequest> searchRequestsByOwners(@NonNull final List<String> owners) {
     int repeat = 0;
-    List<SearchRequest> allRequests = new ArrayList<>();
+    final List<SearchRequest> allRequests = new ArrayList<>();
     boolean pageThrough = true;
-    Map<String, Integer> params = new HashMap<>();
+    final Map<String, Integer> params = new HashMap<>();
     params.put("page", 0);
     params.put("size", 255);
 
@@ -127,7 +151,7 @@ public class BaseClient {
       try {
         ResponseEntity<SliceResponse<SearchRequest>> searchRequestResponse =
             restTemplate.exchange("/v1/consumers/search/requests?page={page}&size={size}",
-                HttpMethod.GET, null,
+                HttpMethod.POST, new HttpEntity<>(owners),
                 new ParameterizedTypeReference<SliceResponse<SearchRequest>>() {
                 }, params);
 

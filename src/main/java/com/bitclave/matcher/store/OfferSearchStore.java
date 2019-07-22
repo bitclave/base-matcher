@@ -7,5 +7,7 @@ import java.util.List;
 public interface OfferSearchStore {
   int insert(List<OfferSearch> offerSearches);
 
+  void clear();
+
   boolean exists(OfferSearch offerSearch);
 }

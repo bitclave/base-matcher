@@ -1,8 +1,6 @@
 package com.bitclave.matcher.store;
 
 import com.bitclave.matcher.models.OfferSearch;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -12,8 +10,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Repository
 public class InMemoryOfferSearchStore implements OfferSearchStore {
-  private static final Logger log = LoggerFactory.getLogger(InMemoryOfferSearchStore.class);
-
   private Map<Long, List<OfferSearch>> store = new ConcurrentHashMap<>();
 
   @Override
@@ -25,6 +21,11 @@ public class InMemoryOfferSearchStore implements OfferSearchStore {
       store.put(offerSearch.getSearchRequestId(), searches);
     });
     return offerSearches.size();
+  }
+
+  @Override
+  public void clear() {
+    store.clear();
   }
 
   @Override
