@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 
 import static com.bitclave.matcher.models.SignedRequest.newSignedRequest;
 
@@ -75,7 +76,10 @@ public class BaseClient {
         }
       }
     }
-    return allOffers;
+    return allOffers
+        .stream()
+        .distinct()
+        .collect(Collectors.toList());
   }
 
   public Slice<Account> accounts(@NonNull final Integer page, @NonNull final Integer size) {
@@ -136,7 +140,10 @@ public class BaseClient {
         }
       }
     }
-    return allOfferSearches;
+    return allOfferSearches
+        .stream()
+        .distinct()
+        .collect(Collectors.toList());
   }
 
   public List<SearchRequest> searchRequestsByOwners(@NonNull final List<String> owners) {
@@ -170,7 +177,10 @@ public class BaseClient {
         }
       }
     }
-    return allRequests;
+    return allRequests
+        .stream()
+        .distinct()
+        .collect(Collectors.toList());
   }
 
   public void saveOfferSearch(List<OfferSearch> offerSearches) {
