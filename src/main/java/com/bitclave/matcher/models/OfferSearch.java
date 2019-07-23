@@ -26,11 +26,12 @@ public class OfferSearch {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     OfferSearch that = (OfferSearch) o;
-    return getId().equals(that.getId());
+    return getSearchRequestId().equals(that.getSearchRequestId()) &&
+        getOfferId().equals(that.getOfferId());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(getId());
+    return Objects.hash(getSearchRequestId(), getOfferId());
   }
 }
