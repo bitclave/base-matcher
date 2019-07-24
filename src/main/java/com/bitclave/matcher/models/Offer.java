@@ -22,6 +22,16 @@ public class Offer {
   private Map<String, String> compare = new HashMap<>();
   private Map<String, CompareAction> rules = new HashMap<>();
 
+  public Offer() {
+    id = 0;
+    owner = "0x0";
+  }
+
+  public Offer(long id, String owner) {
+    this.id = id;
+    this.owner = owner;
+  }
+
   @AllArgsConstructor
   public enum CompareAction {
     EQUALLY("="),

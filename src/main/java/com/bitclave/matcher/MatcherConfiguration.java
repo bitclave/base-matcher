@@ -15,7 +15,9 @@ public class MatcherConfiguration {
   @Bean
   @Primary
   public RestTemplate restTemplate() {
-    RestTemplateBuilder builder = new RestTemplateBuilder().rootUri(rootUri);
+    RestTemplateBuilder builder = new RestTemplateBuilder()
+        .errorHandler(new CustomErrorHandler())
+        .rootUri(rootUri);
     return builder.build();
   }
 }
