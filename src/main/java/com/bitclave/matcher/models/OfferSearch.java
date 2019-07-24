@@ -11,6 +11,12 @@ public class OfferSearch {
   private Long searchRequestId;
   private Long offerId;
 
+  public OfferSearch() {
+    owner = "0x";
+    searchRequestId = 0L;
+    offerId = 0L;
+  }
+
   private OfferSearch(Long searchRequestId, Long offerId) {
     this.owner = "0x0";
     this.searchRequestId = searchRequestId;

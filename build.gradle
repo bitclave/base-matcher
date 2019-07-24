@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = '2.0.4.RELEASE'
+        springBootVersion = '2.1.6.RELEASE'
     }
     repositories {
         mavenCentral()
@@ -27,7 +27,7 @@ dependencies {
     compile('org.projectlombok:lombok')
     compile("org.springframework:spring-web")
     compile("org.springframework.data:spring-data-commons")
-    compile('org.springframework.boot:spring-boot-starter-quartz')
+    compile('org.springframework.boot:spring-boot-starter')
     compile("com.fasterxml.jackson.core:jackson-databind")
 
     compile 'com.google.code.gson:gson:2.8.2'

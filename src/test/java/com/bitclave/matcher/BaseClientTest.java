@@ -69,8 +69,7 @@ public class BaseClientTest {
 
     SliceResponse sliceResponse = new SliceResponse(content, 0, 1, null, false, true, true, 1);
 
-    String searchRequestString =
-        objectMapper.writeValueAsString(sliceResponse);
+    String searchRequestString = objectMapper.writeValueAsString(sliceResponse);
 
     this.server.expect(requestTo("http://localhost/v1/consumers/search/requests?page=0&size=255"))
         .andRespond(withSuccess(searchRequestString, MediaType.APPLICATION_JSON));
