@@ -2,7 +2,6 @@ package com.bitclave.matcher.scheduler;
 
 import com.bitclave.matcher.BaseClient;
 import com.bitclave.matcher.SearchRequestProcessor;
-import com.bitclave.matcher.models.Account;
 import com.bitclave.matcher.models.OfferSearch;
 import com.bitclave.matcher.models.SearchRequest;
 import com.bitclave.matcher.store.OfferSearchStore;
@@ -21,7 +20,7 @@ import java.util.stream.Collectors;
 public class Scheduler {
 
   private static final Logger log = LoggerFactory.getLogger(Scheduler.class);
-  private static final Integer MAX_COUNT_OF_USERS = 100;
+  private static final Integer MAX_COUNT_OF_SEARCH_REQUESTS = 25;
 
   @Autowired
   private BaseClient baseRepository;
@@ -46,24 +45,23 @@ public class Scheduler {
     int page = 0;
 
     while (pageThrough) {
-      final Slice<Account> accounts = baseRepository.accounts(page, MAX_COUNT_OF_USERS);
-      final List<String> owners = accounts.stream()
-          .map(Account::getPublicKey)
-          .collect(Collectors.toList());
-      log.info("Fetched clients  " + owners.size());
+      final Slice<SearchRequest> requests = baseRepository.searchRequests(page, MAX_COUNT_OF_SEARCH_REQUESTS);
+      log.info("Found " + requests.getContent().size() + " search requests to process. page is: " + page);
 
-      final List<OfferSearch> fetched = baseRepository.offerSearchesByOwners(owners);
+      final List<Long> ids = requests.stream()
+          .map(SearchRequest::getId)
+          .collect(Collectors.toList());
+
+      final List<OfferSearch> fetched = baseRepository.offerSearchesBySearchRequestId(ids);
 
       final int offerSearches = offerSearchStore.insert(fetched);
       log.info("Fetched offer searches  " + offerSearches);
 
-      final List<SearchRequest> requests = baseRepository.searchRequestsByOwners(owners);
-      log.info("Found " + requests.size() + " search requests to process");
-      requestProcessor.process(requests);
+      requestProcessor.process(requests.getContent());
 
       offerSearchStore.clear();
 
-      pageThrough = accounts.hasNext();
+      pageThrough = requests.hasNext();
       page++;
     }
 

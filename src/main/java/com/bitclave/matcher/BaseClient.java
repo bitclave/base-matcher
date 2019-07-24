@@ -82,33 +82,7 @@ public class BaseClient {
         .collect(Collectors.toList());
   }
 
-  public Slice<Account> accounts(@NonNull final Integer page, @NonNull final Integer size) {
-    int repeat = 0;
-    final Map<String, Integer> params = new HashMap<>();
-    params.put("page", page);
-    params.put("size", size);
-
-    while (true) {
-      try {
-        ResponseEntity<SliceResponse<Account>> accountResponse =
-            restTemplate.exchange("/v1/consumers/accounts?page={page}&size={size}",
-                HttpMethod.GET, null,
-                new ParameterizedTypeReference<SliceResponse<Account>>() {
-                }, params);
-
-        return accountResponse.getBody();
-
-      } catch (Throwable e) {
-        repeat++;
-        log.warn("accounts", e);
-        if (repeat > MAX_REPEAT_COUNT) {
-          throw e;
-        }
-      }
-    }
-  }
-
-  public List<OfferSearch> offerSearchesByOwners(@NonNull final List<String> owners) {
+  public List<OfferSearch> offerSearchesBySearchRequestId(@NonNull final List<Long> searchRequestIds) {
     int repeat = 0;
     final List<OfferSearch> allOfferSearches = new ArrayList<>();
     boolean pageThrough = true;
@@ -120,7 +94,7 @@ public class BaseClient {
       try {
         ResponseEntity<SliceResponse<OfferSearch>> offerSearchResponse =
             restTemplate.exchange("/v1/consumers/search/results?page={page}&size={size}",
-                HttpMethod.POST, new HttpEntity<>(owners),
+                HttpMethod.POST, new HttpEntity<>(searchRequestIds),
                 new ParameterizedTypeReference<SliceResponse<OfferSearch>>() {
                 }, params);
 
@@ -146,28 +120,21 @@ public class BaseClient {
         .collect(Collectors.toList());
   }
 
-  public List<SearchRequest> searchRequestsByOwners(@NonNull final List<String> owners) {
+  public Slice<SearchRequest> searchRequests(@NonNull final Integer page, @NonNull final Integer size) {
     int repeat = 0;
-    final List<SearchRequest> allRequests = new ArrayList<>();
-    boolean pageThrough = true;
     final Map<String, Integer> params = new HashMap<>();
-    params.put("page", 0);
-    params.put("size", 255);
+    params.put("page", page);
+    params.put("size", size);
 
-    while (pageThrough) {
+    while (true) {
       try {
         ResponseEntity<SliceResponse<SearchRequest>> searchRequestResponse =
             restTemplate.exchange("/v1/consumers/search/requests?page={page}&size={size}",
-                HttpMethod.POST, new HttpEntity<>(owners),
+                HttpMethod.GET, null,
                 new ParameterizedTypeReference<SliceResponse<SearchRequest>>() {
                 }, params);
 
-        allRequests.addAll(searchRequestResponse.getBody()
-            .getContent());
-        pageThrough = searchRequestResponse.getBody()
-            .hasNext();
-        params.put("page", params.get("page") + 1);
-        repeat = 0;
+        return searchRequestResponse.getBody();
 
       } catch (Throwable e) {
         repeat++;
@@ -177,10 +144,6 @@ public class BaseClient {
         }
       }
     }
-    return allRequests
-        .stream()
-        .distinct()
-        .collect(Collectors.toList());
   }
 
   public void saveOfferSearch(List<OfferSearch> offerSearches) {
