@@ -78,7 +78,7 @@ public class BaseClientTest {
     List<String> owners = new ArrayList<>();
     owners.add(searchRequest.getOwner());
 
-    List<SearchRequest> requests = client.searchRequests(0, 100).getContent();
+    List<SearchRequest> requests = client.searchRequests(0, 255).getContent();
     assertThat(requests).isNotNull();
     assertThat(requests).hasSize(1);
     assertThat(requests).contains(searchRequest);
