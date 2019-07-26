@@ -13,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
@@ -176,7 +175,7 @@ public class BaseClient {
     try {
       return restTemplate.exchange("/v1/search/result", HttpMethod.POST, request, OfferSearch.class);
 
-    } catch (HttpServerErrorException e) {
+    } catch (Throwable e) {
       log.warn("saveOfferSearch", e);
 
       return ResponseEntity
