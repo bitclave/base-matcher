@@ -56,7 +56,7 @@ public class BaseClient {
     while (pageThrough) {
       try {
         ResponseEntity<SliceResponse<Offer>> offerResponse =
-            restTemplate.exchange("/v1/consumers/offers?page={page}&size={size}",
+            restTemplate.exchange("/v1/consumers/offers?page={page}&size={size}&except=PRODUCT",
                 HttpMethod.GET, null,
                 new ParameterizedTypeReference<SliceResponse<Offer>>() {
                 }, params);

@@ -52,7 +52,7 @@ public class BaseClientTest {
     SliceResponse sliceResponse = new SliceResponse(content, 0, 1, null, false, true, true, 1);
     String offerString = objectMapper.writeValueAsString(sliceResponse);
 
-    this.server.expect(requestTo("http://localhost/v1/consumers/offers?page=0&size=255"))
+    this.server.expect(requestTo("http://localhost/v1/consumers/offers?page=0&size=255&except=PRODUCT"))
         .andRespond(withSuccess(offerString, MediaType.APPLICATION_JSON));
 
     List<Offer> offers = client.offers();
