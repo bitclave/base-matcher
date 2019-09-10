@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 public class Scheduler {
 
   private static final Logger log = LoggerFactory.getLogger(Scheduler.class);
-  private static final Integer MAX_COUNT_OF_SEARCH_REQUESTS = 25;
+  private static final Integer MAX_COUNT_OF_SEARCH_REQUESTS = 10;
 
   @Autowired
   private BaseClient baseRepository;
